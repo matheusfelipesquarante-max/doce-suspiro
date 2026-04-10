@@ -2,7 +2,6 @@ import subprocess
 import hashlib
 import sys
 from datetime import datetime
-from tkinter import messagebox
 import os
 
 
@@ -65,20 +64,14 @@ def verificar_licenca():
 
     if maquina_atual != MAQUINA:
 
-        messagebox.showerror(
-            "Licença inválida",
-            "Este software não está autorizado para este computador."
-        )
+        print("Erro: Licença inválida")
         sys.exit()
 
     data_exp = datetime.strptime(EXPIRA, "%Y-%m-%d")
 
     if datetime.now() > data_exp:
 
-        messagebox.showerror(
-            "Licença expirada",
-            "A licença deste software expirou."
-        )
+        print("Erro: Licença inválida")
         sys.exit()
 
 
@@ -98,10 +91,7 @@ def verificar_data():
 
         if hoje < ultima:
 
-            messagebox.showerror(
-                "Erro de segurança",
-                "Data do sistema inválida."
-            )
+            print("Erro: Licença inválida")
             sys.exit()
 
     with open(ARQUIVO_DATA,"w") as f:
