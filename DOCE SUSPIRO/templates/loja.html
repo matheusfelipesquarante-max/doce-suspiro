@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Loja - Doce Suspiro{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<!-- TOPO DA LOJA -->
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+<h3 class="mb-2">
+<i class="bi bi-shop"></i>
+Loja Online
+</h3>
+
+<div>
+
+<a href="{{ url_for('meus_pedidos') }}"
+class="btn btn-outline-secondary btn-sm me-2">
+
+<i class="bi bi-bag-check"></i>
+Meus Pedidos
+
+</a>
+
+<a href="{{ url_for('carrinho') }}"
+class="btn btn-primary btn-sm position-relative">
+
+<i class="bi bi-cart"></i>
+Carrinho
+
+<span id="contador-carrinho"
+class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+{{ total_itens or 0 }}
+
+</span>
+
+</a>
+
+</div>
+
+</div>
+
+
+<!-- CATEGORIAS -->
+<div class="mb-4">
+
+<a href="{{ url_for('loja') }}"
+class="btn btn-outline-dark btn-sm me-2 mb-2
+{% if not categoria_atual %}active{% endif %}">
+
+Todas
+
+</a>
+
+{% for c in categorias %}
+
+<a href="{{ url_for('loja', categoria=c.categoria) }}"
+class="btn btn-outline-primary btn-sm me-2 mb-2
+{% if categoria_atual == c.categoria %}active{% endif %}">
+
+{{ c.categoria }}
+
+</a>
+
+{% endfor %}
+
+</div>
+
+
+<!-- PRODUTOS -->
+<div class="produtos-scroll">
+<div class="row">
+
+{% for p in produtos %}
+
+<div class="col-12 mb-3">
+
+<div class="card shadow-sm">
+
+<div class="row g-0 align-items-center">
+
+<!-- IMAGEM -->
+<div class="col-4 col-md-2">
+
+{% if p.imagem %}
+
+<img src="{{ url_for('static', filename='produtos/' + p.imagem) }}"
+class="img-fluid rounded-start"
+style="height:120px; width:100%; object-fit:cover;">
+
+{% else %}
+
+<img src="{{ url_for('static', filename='img/sem_imagem.png') }}"
+class="img-fluid rounded-start"
+style="height:120px; width:100%; object-fit:cover;">
+
+{% endif %}
+
+</div>
+
+
+<!-- CONTEÚDO -->
+<div class="col-8 col-md-10">
+
+<div class="card-body py-2">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div>
+
+<h5 class="mb-1">
+{{ p.nome }}
+</h5>
+
+<p class="text-muted small mb-1">
+{{ p.descricao }}
+</p>
+
+<p class="fw-bold text-success mb-0">
+R$ {{ "%.2f"|format(p.preco) }}
+</p>
+
+</div>
+
+<button class="btn btn-success"
+onclick="adicionarCarrinho({{ p.id }}, this)">
+
+<i class="bi bi-cart-plus"></i>
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div> <!-- row -->
+</div> <!-- produtos-scroll -->
+
+</div> <!-- container -->
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+function adicionarCarrinho(id, botao){
+
+botao.disabled = true
+botao.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'
+
+fetch("/adicionar_carrinho/" + id)
+
+.then(response => {
+
+if(response.ok){
+
+if(typeof mostrarToastCarrinho === "function"){
+mostrarToastCarrinho()
+}
+
+atualizarContadorCarrinho()
+
+}
+
+})
+
+.catch(error => {
+console.error("Erro ao adicionar ao carrinho:", error)
+})
+
+.finally(() => {
+
+botao.disabled = false
+botao.innerHTML = '<i class="bi bi-cart-plus"></i>'
+
+})
+
+}
+
+
+function atualizarContadorCarrinho(){
+
+fetch("/carrinho_quantidade")
+
+.then(response => response.json())
+
+.then(data => {
+
+const contador = document.getElementById("contador-carrinho")
+
+if(contador){
+contador.innerText = data.total
+}
+
+})
+
+.catch(error => {
+console.error("Erro ao atualizar carrinho:", error)
+})
+
+}
+
+</script>
+
+{% endblock %}

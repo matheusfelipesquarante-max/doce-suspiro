@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Empresa - DOCE SUSPIRO{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h3><i class="bi bi-building"></i> Configurações da Empresa</h3>
+
+<div class="card shadow p-4 mt-3">
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="mb-3">
+    <label>Nome da Empresa</label>
+    <input type="text"
+           name="nome"
+           class="form-control"
+           value="{{ empresa.nome if empresa else '' }}"
+           required>
+</div>
+
+<div class="mb-3">
+    <label>Logo da Empresa</label>
+    <input type="file"
+           name="logo"
+           class="form-control">
+
+    {% if empresa and empresa.logo %}
+        <div class="mt-3 text-center">
+            <img src="{{ url_for('static', filename='uploads/' + empresa.logo.split('/')[-1]) }}"
+                 height="120">
+        </div>
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    <label>Mensagem Rodapé</label>
+    <textarea name="mensagem"
+              class="form-control"
+              rows="3">{{ empresa.mensagem_rodape if empresa else '' }}</textarea>
+</div>
+
+<button class="btn btn-success w-100">
+    Salvar Informações
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

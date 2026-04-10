@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}DOCE SUSPIRO{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="row mb-4">
+    <div class="col">
+        <h3><i class="bi bi-grid-fill"></i> Menu Principal</h3>
+        <p class="text-muted">Sistema de Gestão DOCE SUSPIRO</p>
+    </div>
+</div>
+
+<div class="row g-4">
+{% if session['nivel'] != 5 %}
+
+    <!-- DASHBOARD -->
+    <div class="col-md-4">
+        <a href="{{ url_for('dashboard') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-speedometer2 fs-1 text-primary"></i>
+                <h5 class="mt-3">Dashboard</h5>
+                <p class="text-muted small">Visão geral do sistema</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- CLIENTES -->
+    <div class="col-md-4">
+        <a href="{{ url_for('clientes') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-people-fill fs-1 text-success"></i>
+                <h5 class="mt-3">Clientes</h5>
+                <p class="text-muted small">Cadastro e gestão de clientes</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="col-md-4">
+        <a href="{{ url_for('produtos') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-tags-fill fs-1 text-secondary"></i>
+                <h5 class="mt-3">Produtos</h5>
+                <p class="text-muted small">Cadastro e gestão de produtos</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- ESTOQUE -->
+    <div class="col-md-4">
+        <a href="{{ url_for('estoque') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-box-seam fs-1 text-warning"></i>
+                <h5 class="mt-3">Estoque</h5>
+                <p class="text-muted small">Controle de movimentações</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- VENDAS -->
+    <div class="col-md-4">
+        <a href="{{ url_for('vendas') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-cash-coin fs-1 text-success"></i>
+                <h5 class="mt-3">Vendas</h5>
+                <p class="text-muted small">Registro e emissão de comprovantes</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- INSUMOS -->
+    <div class="col-md-4">
+        <a href="{{ url_for('insumos') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-box2 fs-1 text-secondary"></i>
+                <h5 class="mt-3">Insumos</h5>
+                <p class="text-muted small">Cadastro de matérias-primas</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- COMPRAS -->
+    <div class="col-md-4">
+        <a href="{{ url_for('compras') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-cart-plus fs-1 text-primary"></i>
+                <h5 class="mt-3">Compras</h5>
+                <p class="text-muted small">Entrada de insumos no estoque</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- PRECIFICAÇÃO -->
+    <div class="col-md-4">
+        <a href="{{ url_for('precificacao') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-calculator fs-1 text-warning"></i>
+                <h5 class="mt-3">Precificação</h5>
+                <p class="text-muted small">Cálculo de custo e preço de venda</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- CONTAS FIXAS -->
+    <div class="col-md-4">
+        <a href="{{ url_for('contas_fixas') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-receipt fs-1 text-danger"></i>
+                <h5 class="mt-3">Contas Fixas</h5>
+                <p class="text-muted small">Despesas mensais da empresa</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- DRE -->
+    <div class="col-md-4">
+        <a href="{{ url_for('dre') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-graph-up-arrow fs-1 text-success"></i>
+                <h5 class="mt-3">DRE</h5>
+                <p class="text-muted small">Demonstrativo financeiro</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- EMPRESA (CONFIGURAÇÕES DO SISTEMA) -->
+    {% if session['nivel'] == 1 %}
+    <div class="col-md-4">
+        <a href="{{ url_for('empresa') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-building fs-1 text-dark"></i>
+                <h5 class="mt-3">Empresa</h5>
+                <p class="text-muted small">Logo e informações do comprovante</p>
+            </div>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- USUÁRIOS (ADMIN) -->
+    {% if session['nivel'] == 1 %}
+    <div class="col-md-4">
+        <a href="{{ url_for('usuarios') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-person-badge-fill fs-1 text-danger"></i>
+                <h5 class="mt-3">Usuários</h5>
+                <p class="text-muted small">Controle de acessos</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a href="{{ url_for('admin_produtos_loja') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-shop fs-1 text-primary"></i>
+                <h5 class="mt-3">Loja Online</h5>
+                <p class="text-muted small">Gerenciar produtos da LeadPage</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+    <a href="{{ url_for('pedidos_online') }}" class="text-decoration-none">
+
+        <div class="card shadow card-hover border-0 text-center p-4 position-relative">
+
+            {% if pedidos_novos > 0 %}
+            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+                {{ pedidos_novos }}
+            </span>
+            {% endif %}
+
+            <i class="bi bi-bag-check fs-1 text-success"></i>
+            <h5 class="mt-3">Pedidos Online</h5>
+            <p class="text-muted small">Pedidos da LeadPage</p>
+
+            </div>
+
+        </a>
+    </div>
+
+    <!-- CALENDÁRIO DE ENCOMENDAS -->
+    <div class="col-md-4">
+        <a href="{{ url_for('agenda_home') }}" class="text-decoration-none">
+            <div class="card shadow card-hover border-0 text-center p-4">
+                <i class="bi bi-calendar-check fs-1 text-warning"></i>
+                <h5 class="mt-3">Calendário</h5>
+                <p class="text-muted small">Controle de disponibilidade de encomendas</p>
+            </div>
+        </a>
+    </div>
+
+{% endif %}
+{% endif %}
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Detalhe da Venda - DOCE SUSPIRO{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="row mb-4">
+        <div class="col">
+            <h3>
+                <i class="bi bi-receipt"></i>
+                Venda #{{ venda.id }}
+            </h3>
+        </div>
+    </div>
+
+    <!-- INFORMAÇÕES -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <p><strong>Cliente:</strong> {{ venda.cliente_nome }}</p>
+            <p><strong>Data:</strong> {{ venda.data }}</p>
+            <p><strong>Total:</strong> 
+                <span class="fw-bold text-success">
+                    R$ {{ "%.2f"|format(venda.valor_total) }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ITENS -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-dark text-white">
+            Itens da Venda
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Unitário</th>
+                            <th>Subtotal</th>
+                            <th>Desconto</th>
+                            <th>Acréscimo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in itens %}
+                        <tr>
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.quantidade }}</td>
+                            <td>R$ {{ "%.2f"|format(item.valor_unitario) }}</td>
+                            <td>
+                                <strong>
+                                    R$ {{ "%.2f"|format(item.subtotal) }}
+                                </strong>
+                            </td>
+                            <td class="text-danger">
+                                R$ {{ "%.2f"|format(item.desconto or 0) }}
+                            </td>
+
+                            <td class="text-success">
+                                R$ {{ "%.2f"|format(item.acrescimo or 0) }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                Nenhum item encontrado.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- AJUSTES -->
+    {% if ajustes %}
+    <div class="card shadow mb-4">
+        <div class="card-header bg-warning text-dark">
+            Ajustes da Venda
+        </div>
+
+        <div class="card-body">
+
+            <ul class="list-group">
+
+                {% for a in ajustes %}
+                <li class="list-group-item d-flex justify-content-between">
+
+                    <span>{{ a.descricao }}</span>
+
+                    <span class="{% if a.valor < 0 %}text-danger{% else %}text-success{% endif %}">
+                        R$ {{ "%.2f"|format(a.valor) }}
+                    </span>
+
+                </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- AÇÕES -->
+    <div class="d-flex justify-content-between">
+        <a href="{{ url_for('vendas') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+
+        <a href="{{ url_for('emitir_comprovante', venda_id=venda.id) }}"
+           class="btn btn-success">
+            <i class="bi bi-printer"></i> Emitir Comprovante
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

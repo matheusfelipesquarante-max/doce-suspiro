@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Calendário de Encomendas{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h3>
+<i class="bi bi-calendar-check"></i>
+Controle de Agenda
+</h3>
+
+
+<!-- CADASTRAR DIA -->
+
+<div class="card mt-3">
+
+<div class="card-body">
+
+<form method="POST" action="/agenda/salvar">
+
+<div class="row">
+
+<div class="col-md-3">
+
+<label>Data</label>
+<input type="date"
+name="data"
+class="form-control"
+required>
+
+</div>
+
+<div class="col-md-3">
+
+<label>Limite de encomendas</label>
+<input type="number"
+name="limite"
+class="form-control"
+value="10">
+
+</div>
+
+<div class="col-md-3">
+
+<label>Limite por horário</label>
+<input type="number"
+name="limite_hora"
+class="form-control"
+value="3">
+
+</div>
+
+<div class="col-md-3 d-flex align-items-end">
+
+<button class="btn btn-success w-100">
+
+Salvar Dia
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- LISTA DE DIAS -->
+
+<table class="table table-bordered mt-4">
+
+<thead class="table-dark">
+
+<tr>
+<th>Data</th>
+<th>Status</th>
+<th>Limite Dia</th>
+<th>Limite Hora</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for d in dias %}
+
+<tr>
+
+<td>{{ d.data }}</td>
+
+<td>
+
+{% if d.disponivel %}
+<span class="badge bg-success">Disponível</span>
+{% else %}
+<span class="badge bg-danger">Bloqueado</span>
+{% endif %}
+
+</td>
+
+<td>{{ d.limite_encomendas }}</td>
+
+<td>{{ d.limite_por_hora }}</td>
+
+<td>
+
+{% if d.disponivel %}
+
+<a href="/agenda/bloquear/{{ d.data }}"
+class="btn btn-danger btn-sm">
+
+Bloquear
+
+</a>
+
+{% else %}
+
+<a href="/agenda/liberar/{{ d.data }}"
+class="btn btn-success btn-sm">
+
+Liberar
+
+</a>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
