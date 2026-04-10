@@ -19,7 +19,6 @@ from io import BytesIO
 from werkzeug.utils import secure_filename
 from licenca import verificar_licenca
 import sys
-from werkzeug.utils import secure_filename
 
 criar_tabelas()
 verificar_licenca()
