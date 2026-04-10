@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}DOCE SUSPIRO{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- CSS GLOBAL DO SISTEMA -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<!-- 🔥 AQUI ESTÁ A MUDANÇA PRINCIPAL -->
+<body style="min-height:100vh; display:flex; flex-direction:column;">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container-fluid">
+        {% if session.get("nivel") == 5 %}
+        <a class="navbar-brand" href="{{ url_for('loja') }}">DOCE SUSPIRO</a>
+        {% else %}
+        <a class="navbar-brand" href="{{ url_for('menu') }}">DOCE SUSPIRO</a>
+        {% endif %}
+
+        {% if session.get('usuario') %}
+        <div class="d-flex align-items-center text-white">
+            {% if session.get('nivel') != 5 %}
+            <button class="btn btn-outline-light btn-sm me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#videoTutorial">
+                <i class="bi bi-play-circle"></i> Tutorial
+            </button>
+            {% endif %}
+            <span class="me-3">
+                <i class="bi bi-person-circle"></i>
+                {{ session['usuario'] }}
+            </span>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Sair
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- 🔥 ENVOLVE O CONTEÚDO -->
+<main class="flex-grow-1">
+
+{% block content %}
+{% endblock %}
+
+</main>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- JS GLOBAL -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<!-- MODAL TUTORIAL -->
+{% if session.get('nivel') != 5 %}
+
+<div class="modal fade" id="videoTutorial" tabindex="-1">
+<div class="modal-dialog modal-xl modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-header">
+<h5 class="modal-title">Tutorial do Sistema</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+<div class="ratio ratio-16x9">
+<video controls width="100%">
+<source src="{{ url_for('static', filename='tutorial/introducao.mp4') }}" type="video/mp4">
+Seu navegador não suporta vídeo.
+</video>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+const tutorialModal = document.getElementById('videoTutorial')
+
+if(tutorialModal){
+    tutorialModal.addEventListener('hidden.bs.modal', function () {
+        let video = tutorialModal.querySelector("video")
+        video.pause()
+        video.currentTime = 0
+    })
+}
+</script>
+
+{% endif %}
+
+{% block extra_js %}{% endblock %}
+
+<!-- 🔥 FOOTER CORRIGIDO (SEM mt-5) -->
+<footer class="navbar navbar-dark bg-dark">
+<div class="container-fluid justify-content-center text-center text-white small">
+
+© MANAGEMENT SOFTWARE — Todos os direitos reservados.<br>
+
+Este software é protegido pelas leis de propriedade intelectual.<br>
+É proibida a cópia, modificação, engenharia reversa ou distribuição
+sem autorização do desenvolvedor.<br>
+
+O uso indevido poderá resultar em sanções civis e penais
+conforme a Lei nº 9.610/98.
+
+</div>
+</footer>
+
+<!-- TOAST CARRINHO -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+
+<div id="toastCarrinho"
+     class="toast align-items-center text-bg-success border-0">
+
+<div class="d-flex">
+
+<div class="toast-body">
+<i class="bi bi-cart-check"></i>
+Produto adicionado ao carrinho!
+</div>
+
+<button class="btn-close btn-close-white me-2 m-auto"
+data-bs-dismiss="toast"></button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+function mostrarToastCarrinho(){
+    let toastEl = document.getElementById("toastCarrinho")
+    let toast = new bootstrap.Toast(toastEl)
+    toast.show()
+}
+</script>
+
+</body>
+</html>

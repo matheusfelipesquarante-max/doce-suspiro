@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro de Clientes - DOCE SUSPIRO{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+    <!-- CARD CADASTRO -->
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <i class="bi bi-person-plus"></i> Cadastro de Cliente
+            </div>
+            <div class="card-body">
+
+                <form method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label">Nome</label>
+                        <input type="text" name="nome" class="form-control uppercase-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" name="telefone" class="form-control uppercase-input">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">CPF / CNPJ</label>
+                        <input type="text" name="documento" class="form-control uppercase-input">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Endereço</label>
+                        <input type="text" name="endereco" class="form-control uppercase-input">
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-save"></i> Salvar
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- LISTAGEM -->
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-people"></i> Clientes Cadastrados
+            </div>
+            <div class="card-body">
+                <div class="table-responsive tabela-scroll">
+
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Documento</th>
+                            <th>Endereço</th>
+                            <th width="130">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.telefone }}</td>
+                            <td>{{ cliente.documento }}</td>
+                            <td>{{ cliente.endereco }}</td>
+                            <td>
+
+                                <a href="{{ url_for('editar_cliente', id=cliente.id) }}"
+                                   class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <a href="{{ url_for('excluir_cliente', id=cliente.id) }}"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Deseja excluir este cliente?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">Nenhum cliente cadastrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

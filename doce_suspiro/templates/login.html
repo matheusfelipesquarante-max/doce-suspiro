@@ -1,0 +1,124 @@
+{% extends "base_login.html" %}
+
+{% block title %}DOCE SUSPIRO{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+
+<div id="erroLogin"
+style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+">
+
+    <div class="card shadow-lg p-4 text-center" style="max-width:400px">
+
+        <h5 class="text-danger">
+            <i class="bi bi-x-circle-fill"></i>
+            Erro de Login
+        </h5>
+
+        <p class="mt-2">
+            Usuário ou senha inválidos.
+        </p>
+
+        <button class="btn btn-danger mt-3" onclick="fecharErro()">
+            Tentar novamente
+        </button>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endwith %}
+<div class="login-page">
+
+    <div class="card shadow login-card p-4">
+
+        <div class="login-title text-center mb-3">
+            <h2>DOCE SUSPIRO</h2>
+        </div>
+
+        <form method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Nome Completo</label>
+                <input type="text"
+                       name="nome"
+                       class="form-control uppercase-input"
+                       required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Senha</label>
+                <input type="password"
+                       name="senha"
+                       class="form-control uppercase-input"
+                       required>
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100 mb-3">
+                Entrar
+            </button>
+
+        </form>
+        <div class="text-center mt-2">
+            <a href="{{ url_for('home') }}"
+            class="btn btn-outline-secondary w-100">
+
+                <i class="bi bi-arrow-left"></i>
+                Voltar para a loja
+
+            </a>
+
+        </div>
+        <!-- CADASTRO DE USUÁRIO -->
+        <div class="text-center">
+
+            <small class="text-muted">
+                Não possui conta?
+            </small>
+
+            <br>
+
+            <a href="{{ url_for('cadastro_usuario') }}"
+               class="btn btn-outline-primary btn-sm mt-2">
+
+                Cadastre-se
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+function fecharErro(){
+
+    let el = document.getElementById("erroLogin")
+
+    if(el){
+        el.style.display = "none"
+    }
+
+    // limpa senha
+    let senha = document.querySelector("input[name='senha']")
+    if(senha){
+        senha.value = ""
+        senha.focus()
+    }
+}
+</script>
+{% endblock %}

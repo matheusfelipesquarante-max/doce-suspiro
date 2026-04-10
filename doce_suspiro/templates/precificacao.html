@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+{% block title %}Precificação - DOCE SUSPIRO{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h3 class="mb-4">Ficha Técnica / Precificação</h3>
+
+<!-- ================= SELEÇÃO PRODUTO ================= -->
+
+<div class="card shadow mb-4">
+<div class="card-body">
+
+<form method="GET">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<label>Produto</label>
+
+<select name="produto"
+        class="form-select"
+        onchange="this.form.submit()">
+
+<option value="">Selecione</option>
+
+{% for p in produtos %}
+
+<option value="{{ p.id }}"
+{% if produto_id == p.id|string %}selected{% endif %}>
+
+{{ p.nome }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+</div>
+
+
+{% if produto_id %}
+
+<!-- ================= FICHA TÉCNICA ================= -->
+
+<div class="card shadow">
+
+<div class="card-header bg-dark text-white">
+Insumos do Produto
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+<input type="hidden" name="produto_id" value="{{ produto_id }}">
+
+<div id="insumos-container">
+
+{% if ficha %}
+
+    {% for f in ficha %}
+
+    <div class="row mb-2 insumo-item">
+
+        <div class="col-md-5">
+
+            <select name="insumo_id" class="form-select">
+
+            {% for i in insumos %}
+
+            <option value="{{ i.id }}"
+            {% if i.id == f.insumo_id %}selected{% endif %}>
+
+            {{ i.nome }} ({{ i.unidade }})
+
+            </option>
+
+            {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+            <input type="number"
+                   step="0.000001"
+                   name="quantidade"
+                   class="form-control"
+                   value="{{ f.quantidade }}"
+                   required>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+            <input type="text"
+                   class="form-control"
+                   value="R$ {{ '%.2f'|format(f.custo_medio) }}"
+                   readonly>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+            <input type="text"
+                   class="form-control"
+                   value="R$ {{ '%.2f'|format(f.custo) }}"
+                   readonly>
+
+        </div>
+
+
+        <div class="col-md-1">
+
+            <button type="button"
+                    class="btn btn-danger w-100"
+                    onclick="removerInsumo(this)">
+            X
+            </button>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+<!-- PRIMEIRO INSUMO VAZIO -->
+
+<div class="row mb-2 insumo-item">
+
+    <div class="col-md-5">
+
+        <select name="insumo_id" class="form-select">
+
+        {% for i in insumos %}
+
+        <option value="{{ i.id }}">
+
+        {{ i.nome }} ({{ i.unidade }})
+
+        </option>
+
+        {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <div class="col-md-2">
+
+        <input type="number"
+               step="0.001"
+               name="quantidade"
+               class="form-control"
+               placeholder="Qtd"
+               required>
+
+    </div>
+
+
+    <div class="col-md-2">
+
+        <input type="text"
+               class="form-control"
+               value="R$ 0.00"
+               readonly>
+
+    </div>
+
+
+    <div class="col-md-2">
+
+        <input type="text"
+               class="form-control"
+               value="R$ 0.00"
+               readonly>
+
+    </div>
+
+
+    <div class="col-md-1">
+
+        <button type="button"
+                class="btn btn-danger w-100"
+                onclick="removerInsumo(this)">
+        X
+        </button>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+
+<button type="button"
+class="btn btn-secondary mb-3"
+onclick="adicionarInsumo()">
+
++ Adicionar Insumo
+
+</button>
+
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<label>Custo Total do Produto</label>
+
+<input type="text"
+class="form-control"
+value="R$ {{ '%.2f'|format(custo_total) }}"
+readonly>
+
+</div>
+
+<div class="col-md-2 d-flex align-items-end">
+
+<button class="btn btn-success w-100">
+Salvar Ficha Técnica
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+function adicionarInsumo(){
+
+const container = document.getElementById("insumos-container")
+
+const item = document.querySelector(".insumo-item")
+
+const clone = item.cloneNode(true)
+
+clone.querySelector("input[name='quantidade']").value = ""
+
+container.appendChild(clone)
+
+}
+
+function removerInsumo(botao){
+
+const linha = botao.closest(".insumo-item")
+
+linha.remove()
+
+}
+
+</script>
+
+{% endblock %}
