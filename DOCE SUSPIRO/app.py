@@ -2443,9 +2443,6 @@ def calcular_frete():
     taxa = 5 + (km * 2.60)
 
     return {"taxa": round(taxa, 2)}
-def abrir_navegador():
-    webbrowser.open("http://127.0.0.1:5000")
 
 if __name__ == "__main__":
-    threading.Timer(1.5, abrir_navegador).start()
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=8000)
