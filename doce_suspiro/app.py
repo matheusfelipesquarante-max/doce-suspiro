@@ -17,12 +17,10 @@ from reportlab.lib.units import inch, mm
 from flask import send_file
 from io import BytesIO
 from werkzeug.utils import secure_filename
-from licenca import verificar_licenca
 import sys
 from werkzeug.utils import secure_filename
 
 criar_tabelas()
-verificar_licenca()
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def resource_path(relative_path):
