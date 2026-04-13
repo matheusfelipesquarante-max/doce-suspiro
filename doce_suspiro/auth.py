@@ -40,15 +40,15 @@ def nivel_requerido(nivel_permitido):
 def login():
 
     if request.method == "POST":
-        nome = request.form["nome"]
-        senha = request.form["senha"]
+        nome = request.form["nome"].strip().upper()
+        senha = request.form["senha"].strip()
 
         conn = conectar()
 
         usuario = conn.execute("""
             SELECT * FROM usuarios
-            WHERE nome = ?
-        """, (nome,)).fetchone()
+            WHERE UPPER(nome) = ? AND senha = ?
+        """, (nome, senha)).fetchone()
 
         conn.close()
 
@@ -57,15 +57,12 @@ def login():
             session["nivel"] = usuario["nivel"]
             session["usuario_id"] = usuario["id"]
 
-            # USUÁRIO DA LOJA (LEADPAGE)
             if usuario["nivel"] == 5:
                 return redirect(url_for("loja"))
 
-            # USUÁRIOS ADMIN
             return redirect(url_for("menu"))
 
         flash("Usuário ou senha inválidos", "erro")
-        return render_template("login.html")
 
     return render_template("login.html")
 

@@ -52,29 +52,6 @@ def nivel_requerido(*niveis_permitidos):
 # -----------------------------
 # Login
 # -----------------------------
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        nome = request.form["nome"]
-        senha = request.form["senha"]
-
-        conn = conectar()
-        usuario = conn.execute("""
-            SELECT * FROM usuarios
-            WHERE UPPER(nome) = UPPER(?)
-        """, (nome,)).fetchone()
-        conn.close()
-
-        if usuario:
-            session["usuario"] = usuario["nome"]
-            session["nivel"] = usuario["nivel"]
-            session["usuario_id"] = usuario["id"] 
-            return redirect(url_for("loja"))
-        else:
-            return "Usuário ou senha inválidos"
-
-    return render_template("login.html")
-
 # -----------------------------
 # Menu
 # -----------------------------
@@ -1741,7 +1718,6 @@ def cadastro_usuario():
         conn = conectar()
 
         nome = request.form["nome"].upper().strip()
-        usuario = request.form["usuario"].upper().strip()
         senha = request.form["senha"]
 
         celular = request.form.get("celular")
@@ -1752,21 +1728,12 @@ def cadastro_usuario():
 
         nivel = 5
 
-        # verifica se login já existe
-        existe = conn.execute("""
-        SELECT id FROM usuarios WHERE usuario = ?
-        """,(usuario,)).fetchone()
-
-        if existe:
-            conn.close()
-            return "Este login já está em uso."
-
         # cria usuário
         conn.execute("""
         INSERT INTO usuarios
-        (nome, usuario, senha, celular, cep, endereco, numero, bairro, nivel)
-        VALUES (?,?,?,?,?,?,?,?,?)
-        """,(nome,usuario,senha,celular,cep,endereco,numero,bairro,nivel))
+        (nome, senha, celular, cep, endereco, numero, bairro, nivel)
+        VALUES (?,?,?,?,?,?,?,?)
+        """,(nome, senha, celular, cep, endereco, numero, bairro, nivel))
 
         # verifica se cliente já existe pelo telefone
         cliente = conn.execute("""
@@ -1789,7 +1756,7 @@ def cadastro_usuario():
         conn.commit()
         conn.close()
 
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
 
     return render_template("cadastro.html")
 
