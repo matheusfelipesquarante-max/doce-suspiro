@@ -1,2 +1,18 @@
-database.db
+# Banco de dados
 *.db
+database.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+venv/
+.env
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
