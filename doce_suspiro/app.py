@@ -55,14 +55,14 @@ def nivel_requerido(*niveis_permitidos):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        nome = request.form["nome"].upper()
-        senha = request.form["senha"].upper()
+        nome = request.form["nome"]
+        senha = request.form["senha"]
 
         conn = conectar()
-        usuario = conn.execute(
-            "SELECT * FROM usuarios WHERE nome = ? AND senha = ?",
-            (nome, senha)
-        ).fetchone()
+        usuario = conn.execute("""
+            SELECT * FROM usuarios
+            WHERE UPPER(nome) = UPPER(?)
+        """, (nome,)).fetchone()
         conn.close()
 
         if usuario:

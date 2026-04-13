@@ -40,15 +40,15 @@ def nivel_requerido(nivel_permitido):
 def login():
 
     if request.method == "POST":
-        nome = request.form["nome"].upper()
-        senha = request.form["senha"].upper()
+        nome = request.form["nome"]
+        senha = request.form["senha"]
 
         conn = conectar()
 
         usuario = conn.execute("""
             SELECT * FROM usuarios
-            WHERE nome = ? AND senha = ?
-        """, (nome, senha)).fetchone()
+            WHERE nome = ?
+        """, (nome,)).fetchone()
 
         conn.close()
 

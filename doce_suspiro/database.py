@@ -55,19 +55,6 @@ def criar_tabelas():
     if "bairro" not in nomes_colunas:
         cursor.execute("ALTER TABLE usuarios ADD COLUMN bairro TEXT")
 
-    # =============================
-    # ADMIN PADRÃO
-    # =============================
-    admin = cursor.execute("""
-    SELECT * FROM usuarios WHERE nome = ?
-    """, ("ADMIN",)).fetchone()
-
-    if not admin:
-        cursor.execute("""
-        INSERT INTO usuarios (nome, senha, nivel)
-        VALUES (?, ?, ?)
-        """, ("ADMIN", "ADMIN", 1))
-
     conn.commit()
 
     # =============================
