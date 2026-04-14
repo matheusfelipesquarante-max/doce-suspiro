@@ -122,8 +122,29 @@
     border-radius: 15px;
     overflow: hidden;
     transition: 0.3s;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+/* CORPO DO CARD */
+.card-produto .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
 }
 
+/* BLOCO DE TEXTO */
+.card-produto .conteudo {
+    flex-grow: 1;
+}
+
+/* PREÇO + BOTÃO FIXOS */
+.card-produto .acoes {
+    margin-top: auto;
+    text-align: center;
+}
 .card-produto img {
     height: 150px;
     width: 100%;
@@ -163,8 +184,37 @@
     border-radius: 15px;
     overflow: hidden;
     position: relative;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+/* corpo do card */
+.promo-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
 }
 
+/* conteúdo */
+.promo-card .conteudo {
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* ações fixas */
+.promo-card .acoes {
+    margin-top: auto;
+    text-align: center;
+}
+.promo-card h5 {
+    min-height: 48px;
+}
+
+.promo-card p {
+    min-height: 40px;
+}
 .promo-card img {
     height: 150px;
     width: 100%;
@@ -181,7 +231,13 @@
     font-size: 12px;
     border-radius: 10px;
 }
+.secao {
+    margin-top: 60px;
+}
 
+.promo-section {
+    margin-bottom: 40px;
+}
 /* =========================
    BENEFÍCIOS
 ========================= */
@@ -284,24 +340,32 @@
                 <img src="{{ url_for('static', filename='produtos/' + p.imagem) }}">
                 {% endif %}
 
-                <div class="card-body text-center">
+                <div class="card-body">
 
-                    <h5>{{ p.nome }}</h5>
+    <div class="conteudo">
 
-                    <p class="text-muted small">
-                        {{ p.descricao }}
-                    </p>
+        <h5>{{ p.nome }}</h5>
 
-                    <h4 class="text-danger fw-bold">
-                        R$ {{ "%.2f"|format(p.preco) }}
-                    </h4>
+                        <p class="text-muted small">
+                            {{ p.descricao }}
+                        </p>
 
-                    <a href="{{ url_for('auth.login') }}"
-                       class="btn btn-main w-100 mt-2">
+                    </div>
 
-                        🛒 Comprar agora
+                    <div class="acoes">
 
-                    </a>
+                        <h4 class="text-danger fw-bold">
+                            R$ {{ "%.2f"|format(p.preco) }}
+                        </h4>
+
+                        <a href="{{ url_for('auth.login') }}"
+                        class="btn btn-main w-100 mt-2">
+
+                            🛒 Comprar agora
+
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -317,15 +381,74 @@
     </div>
 
 </div>
-<div class="container mt-4 text-center">
 
-    <div class="categoria-container">
+<div class="promo-container promo-section">
 
-        {% for c in categorias %}
-        <button class="btn btn-outline-dark categoria-btn"
-                onclick="filtrarCategoria('{{ c.categoria }}', this)">
-            {{ c.categoria }}
-        </button>
+    <div class="container secao">
+
+        <div class="categoria-container">
+
+            {% for c in categorias %}
+            <button class="btn btn-outline-dark categoria-btn"
+                    onclick="filtrarCategoria('{{ c.categoria }}', this)">
+                {{ c.categoria }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- PRODUTOS -->
+<div class="container mt-5">
+
+    <h3 class="mb-4 text-center">Nossos Produtos</h3>
+
+    <div class="d-flex overflow-auto gap-3 pb-3" style="scroll-snap-type: x mandatory;">
+
+        {% for p in produtos %}
+        <div class="produto-item"
+            data-categoria="{{ p.categoria }}"
+            style="min-width: 260px;">
+
+            <div class="card card-produto h-100">
+
+                {% if p.imagem %}
+                <img src="{{ url_for('static', filename='produtos/' + p.imagem) }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <div class="conteudo text-center">
+
+                        <h5>{{ p.nome }}</h5>
+
+                        <p class="text-muted small">
+                            {{ p.descricao }}
+                        </p>
+
+                    </div>
+
+                    <div class="acoes">
+
+                        <h6 class="text-success">
+                            R$ {{ "%.2f"|format(p.preco) }}
+                        </h6>
+
+                        <a href="{{ url_for('auth.login') }}"
+                        class="btn btn-main w-100 mt-2">
+
+                            🔥 Quero esse bolo
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
         {% endfor %}
 
     </div>
@@ -356,56 +479,6 @@
 
     </div>
 </div>
-
-
-<!-- PRODUTOS -->
-<div class="container mt-5">
-
-    <h3 class="mb-4 text-center">Nossos Produtos</h3>
-
-    <div class="d-flex overflow-auto gap-3 pb-3" style="scroll-snap-type: x mandatory;">
-
-        {% for p in produtos %}
-        <div class="produto-item"
-            data-categoria="{{ p.categoria }}"
-            style="min-width: 260px;">
-
-            <div class="card card-produto h-100">
-
-                {% if p.imagem %}
-                <img src="{{ url_for('static', filename='produtos/' + p.imagem) }}">
-                {% endif %}
-
-                <div class="card-body text-center">
-
-                    <h5>{{ p.nome }}</h5>
-
-                    <p class="text-muted small">
-                        {{ p.descricao }}
-                    </p>
-
-                    <h6 class="text-success">
-                        R$ {{ "%.2f"|format(p.preco) }}
-                    </h6>
-
-                    <a href="{{ url_for('auth.login') }}"
-                       class="btn btn-main w-100 mt-2">
-
-                        🔥 Quero esse bolo
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-        {% endfor %}
-
-    </div>
-
-</div>
-
 
 <!-- SOCIAL -->
 <div class="container text-center mt-5 social">
