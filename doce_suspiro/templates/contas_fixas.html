@@ -3,115 +3,127 @@
 
 {% block content %}
 
-<h3 class="mb-4">Contas Fixas da Empresa</h3>
+<div class="container mt-4">
 
-<div class="row">
+    <!-- TÍTULO -->
+    <h3 class="mb-4">Contas Fixas da Empresa</h3>
 
-<div class="col-md-4">
+    <!-- ================= FORM ================= -->
+    <div class="row mb-4">
+        <div class="col-12">
 
-<div class="card shadow">
+            <div class="card shadow">
 
-<div class="card-header bg-dark text-white">
-Nova Conta
-</div>
+                <div class="card-header bg-dark text-white">
+                    Nova Conta
+                </div>
 
-<div class="card-body">
+                <div class="card-body">
 
-<form method="POST">
+                    <form method="POST">
 
-<div class="mb-3">
-<label>Descrição</label>
-<input type="text" name="descricao" class="form-control" required>
-</div>
+                        <div class="row">
 
-<div class="mb-3">
-<label>Valor</label>
-<input type="number" step="0.01" name="valor" class="form-control" required>
-</div>
+                            <div class="col-md-5 mb-3">
+                                <label>Descrição</label>
+                                <input type="text" name="descricao" class="form-control" required>
+                            </div>
 
-<div class="mb-3">
-<label>Data de Vencimento</label>
-<input type="date" name="data_vencimento" class="form-control" required>
-</div>
+                            <div class="col-md-3 mb-3">
+                                <label>Valor</label>
+                                <input type="number" step="0.01" name="valor" class="form-control" required>
+                            </div>
 
-<button class="btn btn-success w-100">
-Salvar
-</button>
+                            <div class="col-md-3 mb-3">
+                                <label>Data de Vencimento</label>
+                                <input type="date" name="data_vencimento" class="form-control" required>
+                            </div>
 
-</form>
+                            <div class="col-md-1 d-flex align-items-end mb-3">
+                                <button class="btn btn-success w-100">
+                                    <i class="bi bi-save"></i>
+                                </button>
+                            </div>
 
-</div>
+                        </div>
 
-</div>
+                    </form>
 
-</div>
+                </div>
 
-<div class="col-md-8">
+            </div>
 
-<div class="card shadow">
+        </div>
+    </div>
 
-<div class="card-header bg-primary text-white">
-Contas Registradas
-</div>
+    <!-- ================= TABELA ================= -->
+    <div class="row">
+        <div class="col-12">
 
-<div class="card-body table-responsive">
+            <div class="card shadow">
 
-<table class="table table-bordered">
+                <div class="card-header bg-primary text-white">
+                    Contas Registradas
+                </div>
 
-<thead class="table-dark">
+                <div class="card-body">
 
-<tr>
-<th>Descrição</th>
-<th>Valor</th>
-<th>Vencimento</th>
-<th>Ações</th>
-</tr>
+                    <div class="table-responsive tabela-scroll">
 
-</thead>
+                        <table class="table table-bordered table-hover align-middle">
 
-<tbody>
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Vencimento</th>
+                                    <th width="130">Ações</th>
+                                </tr>
+                            </thead>
 
-{% for c in contas %}
+                            <tbody>
 
-<tr>
+                                {% for c in contas %}
+                                <tr>
 
-<td>{{ c.descricao }}</td>
+                                    <td>{{ c.descricao }}</td>
 
-<td>R$ {{ "%.2f"|format(c.valor) }}</td>
+                                    <td class="fw-bold text-danger">
+                                        R$ {{ "%.2f"|format(c.valor) }}
+                                    </td>
 
-<td>{{ c.data_vencimento }}</td>
+                                    <td>{{ c.data_vencimento }}</td>
 
-<td>
+                                    <td>
 
-<a href="{{ url_for('editar_conta',id=c.id) }}"
-class="btn btn-warning btn-sm">
+                                        <a href="{{ url_for('editar_conta',id=c.id) }}"
+                                           class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
 
-<i class="bi bi-pencil"></i>
+                                        <a href="{{ url_for('excluir_conta',id=c.id) }}"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Deseja excluir esta conta?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
 
-</a>
+                                    </td>
 
-<a href="{{ url_for('excluir_conta',id=c.id) }}"
-class="btn btn-danger btn-sm">
+                                </tr>
+                                {% endfor %}
 
-<i class="bi bi-trash"></i>
+                            </tbody>
 
-</a>
+                        </table>
 
-</td>
+                    </div>
 
-</tr>
+                </div>
 
-{% endfor %}
+            </div>
 
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
+        </div>
+    </div>
 
 </div>
 

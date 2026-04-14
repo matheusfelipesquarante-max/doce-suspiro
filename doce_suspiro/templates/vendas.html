@@ -4,19 +4,18 @@
 
 {% block content %}
 
-<div class="container-fluid mt-4">
+<div class="container mt-4">
 
+    <!-- TÍTULO -->
     <div class="row mb-4">
         <div class="col">
             <h3><i class="bi bi-cash-coin"></i> Registro de Vendas</h3>
         </div>
     </div>
 
-    <!-- ================= LAYOUT PRINCIPAL ================= -->
-    <div class="row g-3 align-items-start">
-
-        <!-- ================= FORMULÁRIO ================= -->
-        <div class="col-md-6">
+    <!-- ================= FORM ================= -->
+    <div class="row mb-4">
+        <div class="col-12">
 
             <div class="card shadow-lg">
 
@@ -30,6 +29,7 @@
 
                         <!-- CLIENTE + DATA -->
                         <div class="row">
+
                             <div class="col-md-6 mb-3">
                                 <label>Cliente</label>
                                 <select name="cliente_id" class="form-select" required>
@@ -46,6 +46,7 @@
                                        class="form-control"
                                        required>
                             </div>
+
                         </div>
 
                         <hr>
@@ -57,7 +58,6 @@
 
                             <div class="row mb-2 item align-items-end">
 
-                                <!-- PRODUTO -->
                                 <div class="col-md-4">
                                     <select name="produto_id" class="form-select produto" required>
                                         {% for produto in produtos %}
@@ -68,39 +68,20 @@
                                     </select>
                                 </div>
 
-                                <!-- QTD -->
                                 <div class="col-md-2">
-                                    <input type="number"
-                                           name="quantidade"
-                                           class="form-control"
-                                           min="1"
-                                           value="1"
-                                           required>
+                                    <input type="number" name="quantidade" class="form-control" min="1" value="1">
                                 </div>
 
-                                <!-- DESCONTO -->
                                 <div class="col-md-2">
-                                    <input type="number"
-                                           step="0.01"
-                                           name="desconto_item[]"
-                                           class="form-control"
-                                           placeholder="Desc.">
+                                    <input type="number" step="0.01" name="desconto_item[]" class="form-control" placeholder="Desc.">
                                 </div>
 
-                                <!-- ACRÉSCIMO -->
                                 <div class="col-md-2">
-                                    <input type="number"
-                                           step="0.01"
-                                           name="acrescimo_item[]"
-                                           class="form-control"
-                                           placeholder="Acrésc.">
+                                    <input type="number" step="0.01" name="acrescimo_item[]" class="form-control" placeholder="Acrésc.">
                                 </div>
 
-                                <!-- REMOVER -->
                                 <div class="col-md-2">
-                                    <button type="button"
-                                            class="btn btn-danger btn-sm w-100"
-                                            onclick="removerItem(this)">
+                                    <button type="button" class="btn btn-danger w-100" onclick="removerItem(this)">
                                         <i class="bi bi-x"></i>
                                     </button>
                                 </div>
@@ -109,50 +90,33 @@
 
                         </div>
 
-                        <!-- BOTÃO ADD -->
-                        <button type="button"
-                                class="btn btn-outline-secondary w-100 mt-2"
-                                onclick="adicionarItem()">
+                        <button type="button" class="btn btn-outline-secondary w-100 mt-2" onclick="adicionarItem()">
                             + Adicionar Produto
                         </button>
 
                         <hr>
 
-                        <!-- AJUSTES GERAIS -->
                         <div class="row">
 
                             <div class="col-md-6">
                                 <label>Acréscimo Total</label>
-                                <input type="number"
-                                       step="0.01"
-                                       name="acrescimo_total"
-                                       class="form-control">
+                                <input type="number" step="0.01" name="acrescimo_total" class="form-control">
                             </div>
 
                             <div class="col-md-6">
                                 <label>Desconto Total</label>
-                                <input type="number"
-                                       step="0.01"
-                                       name="desconto_total"
-                                       class="form-control">
+                                <input type="number" step="0.01" name="desconto_total" class="form-control">
                             </div>
 
                         </div>
-                        <hr>
 
                         <div class="card bg-light p-3 mt-3">
 
-                            <h5 class="text-center mb-2">Resumo da Venda</h5>
+                            <h5 class="text-center">Resumo</h5>
 
-                            <p class="mb-1">Subtotal: <strong id="subtotal">R$ 0.00</strong></p>
-
-                            <p class="mb-1 text-success">
-                                Acréscimos: <strong id="total-acrescimo">R$ 0.00</strong>
-                            </p>
-
-                            <p class="mb-1 text-danger">
-                                Descontos: <strong id="total-desconto">R$ 0.00</strong>
-                            </p>
+                            <p>Subtotal: <strong id="subtotal">R$ 0.00</strong></p>
+                            <p class="text-success">Acréscimos: <strong id="total-acrescimo">R$ 0.00</strong></p>
+                            <p class="text-danger">Descontos: <strong id="total-desconto">R$ 0.00</strong></p>
 
                             <hr>
 
@@ -161,7 +125,7 @@
                             </h4>
 
                         </div>
-                        <!-- SUBMIT -->
+
                         <button type="submit" class="btn btn-success w-100 mt-3">
                             Registrar Venda
                         </button>
@@ -173,12 +137,13 @@
             </div>
 
         </div>
+    </div>
 
+    <!-- ================= TABELA ================= -->
+    <div class="row">
+        <div class="col-12">
 
-        <!-- ================= TABELA ================= -->
-        <div class="col-md-6 d-flex">
-
-            <div class="card shadow flex-fill">
+            <div class="card shadow">
 
                 <div class="card-header bg-primary text-white">
                     Histórico de Vendas
@@ -188,7 +153,7 @@
 
                     <div class="tabela-scroll">
 
-                        <table class="table table-sm table-bordered table-hover align-middle mb-0">
+                        <table class="table table-bordered table-hover align-middle mb-0">
 
                             <thead class="table-dark">
                                 <tr>
@@ -201,25 +166,15 @@
                             </thead>
 
                             <tbody>
-
                                 {% for venda in vendas %}
-
                                 <tr>
-
                                     <td>{{ venda.id }}</td>
-
                                     <td>{{ venda.data[:16].replace('T',' ') }}</td>
-
                                     <td>{{ venda.cliente_nome }}</td>
-
-                                    <td>
-                                        <strong class="text-success">
-                                            R$ {{ "%.2f"|format(venda.valor_total) }}
-                                        </strong>
+                                    <td class="text-success fw-bold">
+                                        R$ {{ "%.2f"|format(venda.valor_total) }}
                                     </td>
-
                                     <td>
-
                                         <a href="{{ url_for('detalhe_venda', id=venda.id) }}"
                                            class="btn btn-sm btn-primary">
                                            <i class="bi bi-eye"></i>
@@ -230,21 +185,15 @@
                                            onclick="return confirm('Deseja excluir esta venda?')">
                                            <i class="bi bi-trash"></i>
                                         </a>
-
                                     </td>
-
                                 </tr>
-
                                 {% else %}
-
                                 <tr>
                                     <td colspan="5" class="text-center">
                                         Nenhuma venda registrada.
                                     </td>
                                 </tr>
-
                                 {% endfor %}
-
                             </tbody>
 
                         </table>
@@ -256,7 +205,6 @@
             </div>
 
         </div>
-
     </div>
 
 </div>

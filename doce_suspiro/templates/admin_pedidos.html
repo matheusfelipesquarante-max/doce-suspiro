@@ -4,256 +4,225 @@
 
 <div class="container mt-4">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- TÍTULO + RESUMO -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h3>
+                <i class="bi bi-bag-check"></i> Pedidos Online
+            </h3>
+        </div>
 
-<h3>
-<i class="bi bi-bag-check"></i> Pedidos Online
-</h3>
+        <div class="col-md-6 text-md-end">
 
-{% if pedidos_novos > 0 %}
-<span class="badge bg-danger fs-6">
-{{ pedidos_novos }} novos pedidos
-</span>
-{% endif %}
+            {% if pedidos_novos > 0 %}
+            <span class="badge bg-danger fs-6">
+                {{ pedidos_novos }} novos pedidos
+            </span>
+            {% else %}
+            <span class="badge bg-success fs-6">
+                Tudo em dia ✔
+            </span>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- ================= FILTROS ================= -->
+    <div class="row mb-3">
+
+        <div class="col-md-4">
+            <input type="text"
+                   id="filtroCliente"
+                   class="form-control"
+                   placeholder="Buscar cliente...">
+        </div>
+
+        <div class="col-md-3">
+            <select id="filtroStatus" class="form-select">
+                <option value="">Todos status</option>
+                <option value="NOVO">Novo</option>
+                <option value="CONFIRMADO">Confirmado</option>
+                <option value="PRODUCAO">Produção</option>
+                <option value="ENTREGA">Entrega</option>
+                <option value="FINALIZADO">Finalizado</option>
+                <option value="RECUSADO">Recusado</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- ================= TABELA ================= -->
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            Lista de Pedidos
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive tabela-scroll">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Telefone</th>
+                            <th>Encomenda</th>
+                            <th>Agendamento</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th width="300">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for p in pedidos %}
+
+                        <tr 
+                        data-cliente="{{ p.nome_cliente | lower }}"
+                        data-status="{{ p.status }}">
+
+                            <td>#{{ p.id }}</td>
+
+                            <td>{{ p.nome_cliente }}</td>
+
+                            <td>{{ p.telefone }}</td>
+
+                            <!-- ENCOMENDA -->
+                            <td>
+                                {% for item in p.itens[:2] %}
+                                <div>
+                                    <strong>{{ item.quantidade }}x</strong>
+                                    {{ item.nome_produto }}
+                                </div>
+                                {% endfor %}
+
+                                {% if p.itens|length > 2 %}
+                                <small class="text-muted">
+                                    + {{ p.itens|length - 2 }} itens
+                                </small>
+                                {% endif %}
+                            </td>
+
+                            <!-- AGENDAMENTO -->
+                            <td>
+                                {% if p.data_agendamento %}
+                                <div><i class="bi bi-calendar"></i> {{ p.data_agendamento }}</div>
+                                <div><i class="bi bi-clock"></i> <strong>{{ p.hora_agendamento }}</strong></div>
+                                {% else %}
+                                <span class="text-muted">Não informado</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="fw-bold text-success">
+                                R$ {{ "%.2f"|format(p.valor_total) }}
+                            </td>
+
+                            <!-- STATUS -->
+                            <td>
+
+                                {% if p.status == "NOVO" %}
+                                <span class="badge bg-secondary">NOVO</span>
+
+                                {% elif p.status == "CONFIRMADO" %}
+                                <span class="badge bg-primary">CONFIRMADO</span>
+
+                                {% elif p.status == "PRODUCAO" %}
+                                <span class="badge bg-warning text-dark">PRODUÇÃO</span>
+
+                                {% elif p.status == "ENTREGA" %}
+                                <span class="badge bg-info">ENTREGA</span>
+
+                                {% elif p.status == "FINALIZADO" %}
+                                <span class="badge bg-success">FINALIZADO</span>
+
+                                {% elif p.status == "RECUSADO" %}
+                                <span class="badge bg-danger">RECUSADO</span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- AÇÕES -->
+                            <td class="d-flex flex-wrap gap-1">
+
+                                <button class="btn btn-sm btn-dark"
+                                data-bs-toggle="modal"
+                                data-bs-target="#pedidoModal{{p.id}}">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                                <a href="{{ url_for('alterar_status', id=p.id, status='CONFIRMADO') }}"
+                                   class="btn btn-sm btn-primary">✔</a>
+
+                                <a href="{{ url_for('alterar_status', id=p.id, status='PRODUCAO') }}"
+                                   class="btn btn-sm btn-warning">⚙</a>
+
+                                <a href="{{ url_for('alterar_status', id=p.id, status='ENTREGA') }}"
+                                   class="btn btn-sm btn-info">🚚</a>
+
+                                <a href="{{ url_for('alterar_status', id=p.id, status='FINALIZADO') }}"
+                                   class="btn btn-sm btn-success">✓</a>
+
+                                <a href="{{ url_for('alterar_status', id=p.id, status='RECUSADO') }}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Tem certeza?')">✖</a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
+<!-- ================= FILTRO JS ================= -->
+<script>
 
-<div class="table-responsive tabela-scroll">
+const filtroCliente = document.getElementById("filtroCliente")
+const filtroStatus = document.getElementById("filtroStatus")
 
-<table class="table table-bordered table-hover">
+function filtrarPedidos(){
 
-<thead class="table-dark">
+    let cliente = filtroCliente.value.toLowerCase()
+    let status = filtroStatus.value
 
-<tr>
-<th>ID</th>
-<th>Cliente</th>
-<th>Telefone</th>
-<th>Encomenda</th>
-<th>Agendamento</th>
-<th>Total</th>
-<th>Status</th>
-<th width="300">Ações</th>
-</tr>
+    document.querySelectorAll("tbody tr").forEach(linha => {
 
-</thead>
+        let nome = linha.dataset.cliente || ""
+        let st = linha.dataset.status || ""
 
-<tbody>
+        let mostrar = true
 
-{% for p in pedidos %}
+        if(cliente && !nome.includes(cliente)){
+            mostrar = false
+        }
 
-<tr>
+        if(status && st !== status){
+            mostrar = false
+        }
 
-<td>#{{ p.id }}</td>
+        linha.style.display = mostrar ? "" : "none"
 
-<td>{{ p.nome_cliente }}</td>
+    })
+}
 
-<td>{{ p.telefone }}</td>
+filtroCliente.addEventListener("keyup", filtrarPedidos)
+filtroStatus.addEventListener("change", filtrarPedidos)
 
-
-<!-- ENCOMENDA -->
-<td>
-
-{% if p.itens %}
-
-{% for item in p.itens[:2] %}
-
-<div>
-<strong>{{ item.quantidade }}x</strong>
-{{ item.nome_produto }}
-</div>
-
-{% endfor %}
-
-{% if p.itens|length > 2 %}
-<small class="text-muted">
-+ {{ p.itens|length - 2 }} itens
-</small>
-{% endif %}
-
-{% else %}
-<span class="text-muted">Sem itens</span>
-{% endif %}
-
-</td>
-
-
-<!-- AGENDAMENTO -->
-<td>
-
-{% if p.data_agendamento %}
-
-<div>
-<i class="bi bi-calendar"></i>
-{{ p.data_agendamento }}
-</div>
-
-<div>
-<i class="bi bi-clock"></i>
-<strong>{{ p.hora_agendamento }}</strong>
-</div>
-
-{% else %}
-
-<span class="text-muted">
-Não informado
-</span>
-
-{% endif %}
-
-</td>
-
-
-<td>
-R$ {{ "%.2f"|format(p.valor_total) }}
-</td>
-
-
-<td>
-
-{% if p.status == "NOVO" %}
-<span class="badge bg-secondary">NOVO</span>
-
-{% elif p.status == "CONFIRMADO" %}
-<span class="badge bg-primary">CONFIRMADO</span>
-
-{% elif p.status == "PRODUCAO" %}
-<span class="badge bg-warning text-dark">PRODUÇÃO</span>
-
-{% elif p.status == "ENTREGA" %}
-<span class="badge bg-info">SAIU PARA ENTREGA</span>
-
-{% elif p.status == "FINALIZADO" %}
-<span class="badge bg-success">FINALIZADO</span>
-
-{% elif p.status == "RECUSADO" %}
-<span class="badge bg-danger">RECUSADO</span>
-
-{% endif %}
-
-</td>
-
-
-<td>
-
-<button class="btn btn-sm btn-dark"
-data-bs-toggle="modal"
-data-bs-target="#pedidoModal{{p.id}}">
-<i class="bi bi-eye"></i>
-</button>
-
-<a href="{{ url_for('alterar_status', id=p.id, status='CONFIRMADO') }}"
-class="btn btn-sm btn-primary">Confirmar</a>
-
-<a href="{{ url_for('alterar_status', id=p.id, status='PRODUCAO') }}"
-class="btn btn-sm btn-warning">Produção</a>
-
-<a href="{{ url_for('alterar_status', id=p.id, status='ENTREGA') }}"
-class="btn btn-sm btn-info">Entrega</a>
-
-<a href="{{ url_for('alterar_status', id=p.id, status='FINALIZADO') }}"
-class="btn btn-sm btn-success">Finalizar</a>
-
-<a href="{{ url_for('alterar_status', id=p.id, status='RECUSADO') }}"
-class="btn btn-sm btn-danger"
-onclick="return confirm('Tem certeza que deseja recusar este pedido?')">
-Recusar
-</a>
-
-</td>
-
-</tr>
-<div class="modal fade" id="pedidoModal{{p.id}}" tabindex="-1">
-
-<div class="modal-dialog modal-lg">
-
-<div class="modal-content">
-
-<div class="modal-header">
-
-<h5 class="modal-title">
-Pedido #{{p.id}}
-</h5>
-
-<button class="btn-close" data-bs-dismiss="modal"></button>
-
-</div>
-
-<div class="modal-body">
-
-<p><strong>Cliente:</strong> {{ p.nome_cliente }}</p>
-
-<p><strong>Telefone:</strong> {{ p.telefone }}</p>
-
-<p><strong>Endereço:</strong> {{ p.endereco }}</p>
-
-<p><strong>Tipo:</strong> {{ p.tipo_entrega }}</p>
-
-<hr>
-
-<h6>Agendamento</h6>
-
-<p>
-📅 {{ p.data_agendamento or "Não informado" }}
-</p>
-
-<p>
-⏰ {{ p.hora_agendamento or "-" }}
-</p>
-
-<hr>
-
-<h6>Itens do Pedido</h6>
-
-<ul class="list-group mb-3">
-
-{% for item in p.itens %}
-
-<li class="list-group-item d-flex justify-content-between">
-
-<span>
-{{ item.quantidade }}x {{ item.nome_produto }}
-</span>
-
-<span>
-R$ {{ "%.2f"|format(item.valor) }}
-</span>
-
-</li>
-
-{% endfor %}
-
-</ul>
-
-<hr>
-
-<h6>Observações</h6>
-
-<div class="alert alert-light">
-
-{{ p.observacoes or "Nenhuma observação" }}
-
-</div>
-
-<h5 class="text-end">
-Total: R$ {{ "%.2f"|format(p.valor_total) }}
-</h5>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div> <!-- tabela-scroll -->
-
-</div>
+</script>
 
 {% endblock %}

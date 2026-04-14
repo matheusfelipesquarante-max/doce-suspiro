@@ -5,80 +5,80 @@
 
 <div class="container mt-4">
 
+    <!-- TÍTULO -->
     <div class="row mb-4">
         <div class="col">
             <h3><i class="bi bi-box-seam"></i> Gestão de Insumos</h3>
         </div>
     </div>
 
-    <!-- ================= ALERTAS ================= -->
-
+    <!-- ALERTAS -->
     <div class="row mb-4">
         {% for a in alertas %}
-        <div class="col-md-3">
-            <div class="card shadow border-warning">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+            <div class="card shadow border-warning h-100">
                 <div class="card-body text-center">
                     <h6>{{ a.nome }}</h6>
-                    <p class="text-danger fw-bold">Estoque Baixo</p>
-                    <p>{{ "%.2f"|format(a.estoque) }} {{ a.unidade }}</p>
+                    <p class="text-danger fw-bold mb-1">Estoque Baixo</p>
+                    <p class="mb-0">{{ "%.2f"|format(a.estoque) }} {{ a.unidade }}</p>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 
-    <div class="row">
+    <!-- FORM -->
+    <div class="row mb-4">
+        <div class="col-12">
 
-        <!-- ================= CADASTRO ================= -->
-
-        <div class="col-md-4">
             <div class="card shadow">
                 <div class="card-header bg-dark text-white">
                     Novo Insumo
                 </div>
+
                 <div class="card-body">
 
-                    <!-- 🔥 CORRIGIDO -->
                     <form method="POST">
 
-                        <div class="mb-3">
-                            <label>Nome</label>
-                            <input type="text"
-                                   name="nome"
-                                   class="form-control"
-                                   required>
-                        </div>
+                        <div class="row">
 
-                        <div class="mb-3">
-                            <label>Unidade</label>
-                            <input type="text"
-                                   name="unidade"
-                                   class="form-control">
-                        </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Nome</label>
+                                <input type="text" name="nome" class="form-control" required>
+                            </div>
 
-                        <button class="btn btn-success w-100">
-                            Salvar
-                        </button>
+                            <div class="col-md-4 mb-3">
+                                <label>Unidade</label>
+                                <input type="text" name="unidade" class="form-control">
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end mb-3">
+                                <button class="btn btn-success w-100">
+                                    Salvar
+                                </button>
+                            </div>
+
+                        </div>
 
                     </form>
 
                 </div>
             </div>
+
         </div>
+    </div>
 
-        <!-- ================= LISTA + GRÁFICO ================= -->
+    <!-- TABELA -->
+    <div class="row mb-4">
+        <div class="col-12">
 
-        <div class="col-md-8 d-flex flex-column">
-
-            <!-- TABELA -->
-            <div class="card shadow mb-3">
+            <div class="card shadow">
                 <div class="card-header bg-primary text-white">
                     Lista de Insumos
                 </div>
 
                 <div class="card-body">
 
-                    <!-- 🔥 SCROLL PADRÃO -->
                     <div class="table-responsive tabela-scroll">
 
                         <table class="table table-bordered table-hover align-middle">
@@ -130,7 +130,13 @@
                 </div>
             </div>
 
-            <!-- GRÁFICO -->
+        </div>
+    </div>
+
+    <!-- GRÁFICO -->
+    <div class="row">
+        <div class="col-12">
+
             <div class="card shadow">
                 <div class="card-header bg-dark text-white">
                     Curva ABC dos Insumos
@@ -144,7 +150,6 @@
             </div>
 
         </div>
-
     </div>
 
 </div>

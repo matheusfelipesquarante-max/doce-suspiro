@@ -6,268 +6,204 @@
 
 <div class="container mt-4">
 
-<div class="row mb-4">
-<div class="col">
-<h3><i class="bi bi-shop"></i> Produtos da LeadPage</h3>
-<p class="text-muted">Gerencie os produtos exibidos na loja online</p>
-</div>
-</div>
+    <!-- TÍTULO -->
+    <div class="row mb-4">
+        <div class="col">
+            <h3><i class="bi bi-shop"></i> Produtos da LeadPage</h3>
+            <p class="text-muted">Gerencie os produtos exibidos na loja online</p>
+        </div>
+    </div>
 
-<div class="row">
+    <!-- ================= FORM ================= -->
+    <div class="row mb-4">
+        <div class="col-12">
 
-<!-- CADASTRO -->
-<div class="col-md-4">
+            <div class="card shadow">
 
-<div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <i class="bi bi-plus-circle"></i> Novo Produto
+                </div>
 
-<div class="card-header bg-dark text-white">
-<i class="bi bi-plus-circle"></i> Novo Produto
-</div>
+                <div class="card-body">
 
-<div class="card-body">
+                    <form method="POST"
+                          action="{{ url_for('salvar_produto_loja') }}"
+                          enctype="multipart/form-data">
 
-<form method="POST"
-action="{{ url_for('salvar_produto_loja') }}"
-enctype="multipart/form-data">
+                        <div class="row">
 
-<div class="mb-3">
-<label class="form-label">Nome do Produto</label>
-<input type="text"
-name="nome"
-class="form-control"
-required>
-</div>
+                            <div class="col-md-4 mb-3">
+                                <label>Nome</label>
+                                <input type="text" name="nome" class="form-control" required>
+                            </div>
 
-<div class="mb-3">
-<label class="form-label">Categoria</label>
-<input type="text"
-name="categoria"
-class="form-control"
-placeholder="Ex: Ovos de Páscoa"
-required>
-</div>
+                            <div class="col-md-3 mb-3">
+                                <label>Categoria</label>
+                                <input type="text" name="categoria" class="form-control" required>
+                            </div>
 
-<div class="mb-3">
-<label class="form-label">Preço</label>
-<input type="number"
-step="0.01"
-name="preco"
-class="form-control"
-required>
-</div>
+                            <div class="col-md-2 mb-3">
+                                <label>Preço</label>
+                                <input type="number" step="0.01" name="preco" class="form-control" required>
+                            </div>
 
-<div class="mb-3">
-<label class="form-label">Descrição</label>
-<textarea name="descricao"
-class="form-control"
-rows="3"></textarea>
-</div>
+                            <div class="col-md-3 mb-3">
+                                <label>Imagem</label>
+                                <input type="file" name="imagem" class="form-control" accept="image/*" onchange="previewImagem(event)">
+                            </div>
 
-<div class="mb-3">
+                        </div>
 
-<label class="form-label">Imagem do Produto (opcional)</label>
+                        <div class="row">
 
-<input type="file"
-name="imagem"
-class="form-control"
-accept="image/*"
-onchange="previewImagem(event)">
+                            <div class="col-md-10 mb-3">
+                                <label>Descrição</label>
+                                <textarea name="descricao" class="form-control" rows="2"></textarea>
+                            </div>
 
-<img id="preview"
-style="width:100%; margin-top:10px; display:none; border-radius:6px;">
+                            <div class="col-md-2 d-flex align-items-end mb-3">
+                                <button class="btn btn-success w-100">
+                                    <i class="bi bi-save"></i>
+                                </button>
+                            </div>
 
-</div>
+                        </div>
 
-<button class="btn btn-success w-100">
-<i class="bi bi-save"></i> Salvar Produto
-</button>
+                        <img id="preview"
+                             style="max-width:200px; display:none; border-radius:8px; margin-top:10px;">
 
-</form>
+                    </form>
 
-</div>
-</div>
-</div>
+                </div>
 
+            </div>
 
-<!-- LISTA -->
-<div class="col-md-8">
+        </div>
+    </div>
 
-<div class="card shadow">
-
-<div class="card-header bg-primary text-white">
-<i class="bi bi-list"></i> Produtos Cadastrados
-</div>
-
-<div class="card-body">
-    <div class="table-responsive tabela-scroll">
+    <!-- ================= FILTROS ================= -->
     <div class="row mb-3">
 
-    <div class="col-md-4">
-        <input type="text" id="filtroNome" class="form-control"
-               placeholder="Buscar produto...">
+        <div class="col-md-4">
+            <input type="text" id="filtroNome" class="form-control"
+                   placeholder="Buscar produto...">
+        </div>
+
+        <div class="col-md-3">
+            <select id="filtroCategoria" class="form-select">
+                <option value="">Todas categorias</option>
+                {% set categorias = produtos | map(attribute='categoria') | unique | list %}
+                {% for c in categorias %}
+                <option value="{{ c }}">{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select id="filtroStatus" class="form-select">
+                <option value="">Todos status</option>
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+            </select>
+        </div>
+
     </div>
 
-    <div class="col-md-3">
-        <select id="filtroCategoria" class="form-select">
-            <option value="">Todas categorias</option>
-            {% set categorias = produtos | map(attribute='categoria') | unique | list %}
-            {% for c in categorias %}
-            <option value="{{ c }}">{{ c }}</option>
-            {% endfor %}
-        </select>
+    <!-- ================= TABELA ================= -->
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-list"></i> Produtos Cadastrados
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive tabela-scroll">
+
+                        <table class="table table-bordered table-hover align-middle">
+
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Imagem</th>
+                                    <th>Produto</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Status</th>
+                                    <th width="150">Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for p in produtos %}
+                                <tr 
+                                data-nome="{{ p.nome | lower }}"
+                                data-categoria="{{ p.categoria | lower }}"
+                                data-status="{{ p.ativo }}">
+
+                                    <td>{{ p.id }}</td>
+
+                                    <td>
+                                        {% if p.imagem %}
+                                        <img src="{{ url_for('static', filename='produtos/' + p.imagem) }}"
+                                             style="width:60px; border-radius:6px;">
+                                        {% else %}
+                                        <span class="text-muted">Sem imagem</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>{{ p.nome }}</td>
+                                    <td>{{ p.categoria }}</td>
+                                    <td>R$ {{ "%.2f"|format(p.preco) }}</td>
+
+                                    <td>
+                                        {% if p.ativo == 1 %}
+                                            <span class="badge bg-success">Ativo</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inativo</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ url_for('editar_produto_loja', id=p.id) }}"
+                                           class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a href="{{ url_for('excluir_produto_loja', id=p.id) }}"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Deseja excluir este produto?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+                                {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        Nenhum produto cadastrado.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-3">
-        <select id="filtroStatus" class="form-select">
-            <option value="">Todos status</option>
-            <option value="1">Ativo</option>
-            <option value="0">Inativo</option>
-        </select>
-    </div>
-
 </div>
-
-<table class="table table-bordered table-hover align-middle">
-
-<thead class="table-dark">
-<tr>
-<th>ID</th>
-<th>Imagem</th>
-<th>Produto</th>
-<th>Categoria</th>
-<th>Preço</th>
-<th>Status</th>
-<th width="150">Ações</th>
-</tr>
-</thead>
-<tbody>
-
-{% for p in produtos %}
-
-<tr 
-data-nome="{{ p.nome | lower }}"
-data-categoria="{{ p.categoria | lower }}"
-data-status="{{ p.ativo }}">
-
-<td>{{ p.id }}</td>
-
-<td>
-{% if p.imagem %}
-<img src="{{ url_for('static', filename='produtos/' + p.imagem) }}"
-style="width:60px; border-radius:6px;">
-{% else %}
-<span class="text-muted">Sem imagem</span>
-{% endif %}
-</td>
-
-<td>{{ p.nome }}</td>
-<td>{{ p.categoria }}</td>
-<td>R$ {{ "%.2f"|format(p.preco) }}</td>
-
-<td>
-{% if p.ativo == 1 %}
-<span class="badge bg-success">Ativo</span>
-{% else %}
-<span class="badge bg-secondary">Inativo</span>
-{% endif %}
-</td>
-
-<td>
-<a href="{{ url_for('editar_produto_loja', id=p.id) }}"
-class="btn btn-warning btn-sm">
-<i class="bi bi-pencil"></i>
-</a>
-
-<a href="{{ url_for('excluir_produto_loja', id=p.id) }}"
-class="btn btn-danger btn-sm"
-onclick="return confirm('Deseja excluir este produto?')">
-<i class="bi bi-trash"></i>
-</a>
-</td>
-
-</tr>
-
-{% else %}
-<tr>
-<td colspan="7" class="text-center">
-Nenhum produto cadastrado.
-</td>
-</tr>
-{% endfor %}
-
-</tbody>
-
-</table>
-</div> <!-- tabela-scroll -->
-</div> <!-- card-body -->
-</div>
-</div>
-
-</div>
-
-</div>
-<script>
-
-const filtroNome = document.getElementById("filtroNome")
-const filtroCategoria = document.getElementById("filtroCategoria")
-const filtroStatus = document.getElementById("filtroStatus")
-
-function filtrarTabela(){
-
-    let nome = filtroNome.value.toLowerCase()
-    let categoria = filtroCategoria.value.toLowerCase()
-    let status = filtroStatus.value
-
-    let linhas = document.querySelectorAll("tbody tr")
-
-    linhas.forEach(linha => {
-
-        let nomeProduto = linha.dataset.nome || ""
-        let categoriaProduto = linha.dataset.categoria || ""
-        let statusProduto = linha.dataset.status || ""
-
-        let mostrar = true
-
-        if(nome && !nomeProduto.includes(nome)){
-            mostrar = false
-        }
-
-        if(categoria && categoriaProduto !== categoria){
-            mostrar = false
-        }
-
-        if(status && statusProduto !== status){
-            mostrar = false
-        }
-
-        linha.style.display = mostrar ? "" : "none"
-
-    })
-}
-
-filtroNome.addEventListener("keyup", filtrarTabela)
-filtroCategoria.addEventListener("change", filtrarTabela)
-filtroStatus.addEventListener("change", filtrarTabela)
-
-</script>
-<script>
-
-function previewImagem(event){
-
-let reader = new FileReader()
-
-reader.onload = function(){
-
-let img = document.getElementById("preview")
-img.src = reader.result
-img.style.display = "block"
-
-}
-
-reader.readAsDataURL(event.target.files[0])
-
-}
-
-</script>
 
 {% endblock %}
